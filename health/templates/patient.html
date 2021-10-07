@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block body %}
+<style>
+    .collapsible {
+        background-color: #777;
+        color: white;
+        cursor: pointer;
+        height: 20px;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+        padding-top: 0px;
+    }
+
+    .active, .collapsible:hover {
+        background-color: #555;
+    }
+
+    .content {
+        padding: 0 18px;
+        display: none;
+        width: 100%;
+        overflow: hidden;
+        background-color: #f1f1f1;
+    }
+</style>
+<header>
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-4 col-sm-5">
+                <p>Bienvenido {{session['name'] }} a la clínica SanMEDS</p>
+            </div>
+
+            <div class="col-md-8 col-sm-7 text-align-right">
+                <span class="phone-icon"><i class="fa fa-phone"></i> 961789563</span>
+                <span class="date-icon"><i class="fa fa-calendar-plus-o"></i> M - 10:00 PM (Lunes-Viernes)</span>
+            </div>
+
+        </div>
+    </div>
+</header>
+
+
+<!-- MENU -->
+<section class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container">
+
+        <div class="navbar-header">
+            <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon icon-bar"></span>
+                <span class="icon icon-bar"></span>
+                <span class="icon icon-bar"></span>
+            </button>
+
+            <!-- lOGO TEXT HERE -->
+            <a href="/" class="navbar-brand"><i class="fa fa-h-square"></i>SanMEDS</a>
+        </div>
+
+        <!-- MENU LINKS -->
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li class
+                            ="appointment-btn"><a style="background-color: #4267b2" href="{{ url_for('submit')}}">
+                    Enviar un fichero nuevo</a></li>
+                <li class="appointment-btn">{% if session['logged_in'] %}
+                    <a href="#">{{session['email'] }}</a>
+                    <a style="background-color: red" href="{{ url_for('logout') }}">Cerrar Sesión</a>
+                    {% else%}}
+                    <a href=""> Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+    </div>
+</section>
+
+<section id="patient" data-stellar-background-ratio="3">
+    <div class="container">
+        <div class="row">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Fichero</th>
+                    <th scope="col">Asiganado a</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Comentario</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for patient in patients %}
+
+                <tr>
+                    <td>
+                        <p> {{ loop.index }}</p>
+                    </td>
+                    <td>
+                        <a target="_blank" href="../static/images/{{patient.file}}"><p> {{ patient.file }}</p></a>
+                    </td>
+                    <td>
+                        <p> {{ patient.assigned_to }}</p>
+                    </td>
+                    <td>
+                        <p> {{ patient.date }}</p>
+                        </a>
+                    </td>
+                    <td>
+                        <button type="button" class="collapsible">Check</button>
+                        <div class="content">
+                            <p>{{patient.text}}</p>
+                        </div>
+                    </td>
+
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+    </div>
+</section>
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+    }
+</script>
+
+{% endblock body %}
